@@ -9,7 +9,7 @@
     "mongoose": "^5.13.15",
     "validator": "^10.11.0"
   },
-  "name": "NODE TASK APP",
+  "name": "node-task-app",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

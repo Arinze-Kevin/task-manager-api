@@ -3,15 +3,49 @@ const Task = require('../models/task')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
+// GET /tasks?completed=true
 router.get('/tasks', auth, async (req, res) => {
+    const match ={}
+
+    if (req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
+
     try {
-        await req.user.populate('tasks').execPopulate
+        await req.user.populate({
+            path: 'tasks',
+            match
+        }).execPopulate()
         res.send(req.user.tasks)
     } catch (e) {
         res.status(500).send()
     }
 })
 
+
+
+//New get owner tasks
+// router.get('/tasks/me', auth, async (req, res) => {
+//     const match = {}
+
+//     if (req.query.completed) {
+//         match.completed = req.query.completed === 'true'
+//     }
+
+//     try {
+//         // const task = await Task.find({owner: req.user})
+
+//         await req.user.populate({
+//             path: 'tasks',
+//             match
+//         }).execPopulate()
+
+
+//         res.send(req.user.tasks)
+//     } catch (e) {
+//         res.status(500).send()
+//     }
+// })
 
 router.get('/tasks/:id', auth, async (req, res) => {
     const _id = req.params.id
@@ -28,6 +62,7 @@ router.get('/tasks/:id', auth, async (req, res) => {
         res.status(500).send()
     }
 })
+
 
 router.post('/tasks', auth, async (req, res) => {
     const task = new Task({

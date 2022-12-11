@@ -62,6 +62,7 @@ userSchema.virtual('tasks', {
     foreignField: 'owner'
 })
 
+// Hiding private datas we dont to display on users profile.
 userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
@@ -73,6 +74,7 @@ userSchema.methods.toJSON = function () {
     return userObject
 }
 
+// Generating Authentication token
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET)
@@ -81,6 +83,7 @@ userSchema.methods.generateAuthToken = async function () {
     await user.save()
 }
 
+// Finding a user by credentials at login
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
 
@@ -97,6 +100,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
+//Hashing user password with bcrypt before saving to our database.
 userSchema.pre('save', async function (next) {
     const user = this
 
